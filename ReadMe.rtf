@@ -1,0 +1,207 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1031\deflangfe1031\deftab708{\fonttbl{\f0\fswiss\fprq2\fcharset0 Calibri Light;}{\f1\fswiss\fprq2\fcharset0 Calibri;}{\f2\froman\fprq2\fcharset0 Times New Roman;}}
+{\colortbl ;\red0\green0\blue255;\red46\green116\blue181;\red5\green99\blue193;}
+{\stylesheet{ Normal;}{\s1 heading 1;}{\s2 heading 2;}}
+{\*\generator Riched20 10.0.14393}{\*\mmathPr\mnaryLim0\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
+\pard\widctlpar\expndtw-10\kerning28\f0\fs56 Die neue NanoESP-Library mit MQTT, HTTP und Blynk-Support\par
+
+\pard\widctlpar\sa160\sl252\slmult1\expndtw0\kerning0\f1\fs22\par
+Im Kontext des neues IoT Adventskalenders 2016 wurde die Library zum NanoESP um einige Funktionen erweitert. Neben den klassischen Befehlen zum Steuern des Moduls, gibt es in dieser Version auch zwei Sub-Libraries, die das \'dcbermitteln von Webseiten erleichtern oder die Verwendung des beliebten MQTT({{\field{\*\fldinst{HYPERLINK http://mqtt.org/ }}{\fldrslt{http://mqtt.org/\ul0\cf0}}}}\f1\fs22 ) IoT-Protokolls erm\'f6glichen. \par
+Unter den Beispielen befindet sich au\'dferdem ein Programm, welches Blynk-Projekte ({{\field{\*\fldinst{HYPERLINK http://www.blynk.cc/ }}{\fldrslt{http://www.blynk.cc/\ul0\cf0}}}}\f1\fs22 ) erm\'f6glicht. Damit Sie das Programm verwenden k\'f6nnen, ben\'f6tigen Sie eine zus\'e4tzliche Library:\par
+{{\field{\*\fldinst{HYPERLINK https://github.com/blynkkk/blynk-library/releases/tag/v0.3.4 }}{\fldrslt{https://github.com/blynkkk/blynk-library/releases/tag/v0.3.4\ul0\cf0}}}}\f1\fs22\par
+Auf dieser Seite m\'f6chte ich die einzelnen Funktionen und Methoden etwas detaillierter erl\'e4utern sowie auf etwaige Neuerungen eingehen. Die Basis der Library bildet die SoftwareSerial-Library, die bereits in Arduino integriert ist. Aufgrund dessen k\'f6nnen Befehle wie find() und findUntil() auch mit dieser Library genutzt werden. \par
+
+\pard\keep\keepn\widctlpar\sb240\sl252\slmult1\cf2\f0\fs32 Inhalt\par
+
+\pard\widctlpar\sa100\sl252\slmult1\tqr\tldot\tx9062 {\cf3\ul\f1\fs22{\field{\*\fldinst{HYPERLINK "\\l "}}{\fldrslt{\ul\cf1 Basics (NanoESP)\cf0\ulnone\tab 1}}}}\cf0\f1\fs22\par
+{\cf3\ul{\field{\*\fldinst{HYPERLINK "\\l "}}{\fldrslt{\ul\cf1 Webserver (NanoESP_HTTP)\cf0\ulnone\tab 3}}}}\f1\fs22\par
+{\cf3\ul{\field{\*\fldinst{HYPERLINK "\\l "}}{\fldrslt{\ul\cf1 MQTT (NanoESP_MQTT)\cf0\ulnone\tab 3}}}}\f1\fs22\par
+
+\pard\widctlpar\li220\sa100\sl252\slmult1\tqr\tldot\tx9062 {\cf3\ul{\field{\*\fldinst{HYPERLINK "\\l "}}{\fldrslt{\ul\cf1 Datentyp mqtt_msg\cf0\ulnone\tab 4}}}}\f1\fs22\par
+{\cf3\ul{\field{\*\fldinst{HYPERLINK "\\l "}}{\fldrslt{\ul\cf1 Abonnieren mit Funktions-Verkn\'fcpfung:\cf0\ulnone\tab 5}}}}\f1\fs22\par
+
+\pard\widctlpar\sa160\sl252\slmult1\par
+
+\pard\keep\keepn\widctlpar\s1\sb240\sl252\slmult1\cf2\f0\fs32 Basics (NanoESP)\par
+\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\cf0\ul\b\f1\fs22 Funktion\cell Erl\'e4uterung\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1\ulnone\b0 boolean \b init\b0 (boolean vDebug=false);\cell Initialisiert das Board und stellt default Werte ein (Transfermode = 0, Multiple Connections = 1)\line Wenn der Debug-Parameter true ist, wird bei einem fehlerhaften Befehl Zusatzinformationen \'fcber den Seriellen Monitor ausgegeben\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1  String \b sendCom\b0 (String command);\par
+\cell Sendet ein AT-Kommando an das ESP-Modul\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b sendCom\b0 (String command, char respond[]);\cell s.o.; Zus\'e4tzlich wird \'fcberpr\'fcft, ob das Modul eine Antwort sendet, die dem Respond-Parameter entspricht. \cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b setMultipleConnections\b0 ();\cell Erlaubt Mehrfachverbindungen (\i AT+CIPMUX=1\i0 ) \cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b setTransferMode\b0 () ;\cell Setzt den Transfermodus auf transparent (\i AT+CIPMODE=0\i0 )\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b reset\b0 ();\cell Resetet das Board und wartet, bis es wieder bereit ist\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1\cell\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b configWifiMode\b0 (int modus);\cell Stellt den WLAN Modus ein (\i STATION, ACCESSPOINT, DUAL\i0 )\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b configWifi\b0 (int modus, String ssid, String password);\cell Stellt das WLAN ein mit Modus, SSID und Password\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b configWifiStation\b0 (String ssid, String password);\cell Stellt eine Verbindung zu einem WLAN-Router her\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b configWifiAP\b0 (String ssid, String password);\cell Stellt einen eignen AccesPoint zur Verf\'fcgung (Password darf leer sein, sonst min sechs Zeichen)\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b configWifiAP\b0 (String ssid, String password, int channel, int crypt);\par
+\cell S.o.\par
+Zus\'e4tzliche Parameter: WLAN-Kanal, Verschl\'fcsselungsmodus\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b disconnectWifi\b0 ();\cell Trennt die WLAN-Verbindung\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1\cell\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b wifiConnected\b0 ();\tab\cell\'dcberpr\'fcft, ob automatisch eine WLAN-Verbindung zu einer Station hergestellt wurde (Zeitersparnis gegen\'fcber neue Verbindung bei bekannter Station)\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b getIpMac\b0 (String &ip, String &mac);\cell Liefert IP und MAC-Adresse des Boards. Parameter werden als Referenz \'fcbergeben \cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 String \b getIp\b0 ();\cell Ermittelt die IP/IPs des Boards (\i AT+CIFSR\i0 )\line\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b newConnection\b0 (int id, String type, String ip , unsigned int port);\cell Baut eine neue Verbindung (TCP oder UDP) auf. \par
+Parameter: Verbindungs-ID (0-4), Typ (TCP/UDP), IP (Ziel IP oder Adresse), Port \cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b closeConnection\b0 (int id) ;\cell Trennt die Verbindung mit der angegebenen Verbindungs-ID\line\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b startUdpServer\b0 (int id, String ip , unsigned int port, unsigned int recvport, int mode=0);\par
+\cell\'d6ffnet eine UDP-Verbindung \line Der Empfangs-Port kann ein anderer sein als der Sende-Port.\line Modus 0: Die Ziel IP \'e4ndert sich nicht \line Modus 1: die Ziel IP \'e4ndert sich einmal, wenn das Board eine Nachricht von einer anderen IP erh\'e4lt.\line Modus 2: Das Board \'e4ndert die Ziel IP immer, wenn es eine neue Nachricht von einer anderen IP erhalten hat. \cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b endUdpServer\b0 (int id);\par
+    \cell Beendet die UDP-Verbindung mit der angegeben ID\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b startTcpServer\b0 (unsigned int port) ;\cell Startet einen TCP-Server unter dem angegeben Port. Es kann nur ein TCP-Server aktiviert sein\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b endTcpServer\b0 ();\par
+\cell Beendet den TCP-Server\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b sendData\b0 (int id, String msg);\cell Sendet Text \'fcber die angegebene Verbindung\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 boolean \b sendDataClose\b0 (int id, String msg);\cell Sendet Text und schlie\'dft danach die Verbindung\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b sendRaw\b0 (int id, unsigned char data[], int LenChar);\cell Sendet bin\'e4re Daten (kein String)\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 int \b getId\b0 (); \tab\tab\cell Gibt die Verbindungs-ID bei Datenempfang an. Wenn keine Daten empfangen wurden ist der Wert -1\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b recvData\b0 (int &id,int &len);\cell Wird true, wenn Daten empfangen wurden. ID und L\'e4nge werden per Referenz zur\'fcckgegeben\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\sl276\slmult1 int \b ping\b0 (String adress);\cell Pingt den Server unter der angegebenen Adresse an. Die Antwort-Zeit in ms wird zur\'fcckgegeben. Ist die Zeit 0 wurde keine Antwort empfangen.\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar\cell\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3544\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9450 
+\pard\intbl\widctlpar void \b serialDebug\b0 ();    \par
+\cell Stellt eine direkte Verbindung zwischen Software und Hardware Serieller Schnittstelle her. Kann zum Testen von AT-Kommandos verwendet werden.\cell\row 
+\pard\widctlpar\sa160\sl252\slmult1\par
+
+\pard\keep\keepn\widctlpar\s1\sb240\sl252\slmult1\cf2\f0\fs32 Webserver (NanoESP_HTTP)\par
+\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3104\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1\cf0\ul\b\f1\fs22 Funktion\ulnone\b0\cell\ul\b Erl\'e4uterung\ulnone\b0\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3104\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b recvRequest\b0 (int &id, String &method, String &ressource, String &parameter);   \cell Gibt true zur\'fcck, wenn ein http-Request empfangen wurde. ID, Methode (POST oder GET) sowie angeforderte URL und etwaige Befehle werden per Referenz zur\'fcckgegeben.\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3104\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b recvHTTP\b0 (int id, int len, String &method, String &ressource, String &parameter);\cell s.o.\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3104\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b sendFromFlash\b0 (int client, const char *website, int len);\cell Sendet eine als Progmem-Variable gespeicherte Webseite direkt an den angeben Client (Verbindungs-ID)\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3104\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b sendStreamHeader\b0 (int connectionId);\tab\tab\par
+\tab\par
+\cell Sendet die Antwort auf einen Event-Stream-Request. Server-Send-Events k\'f6nnen zum schnellen Datenaustausch vom Server zum Client genutzt werden ({{\field{\*\fldinst{HYPERLINK http://www.html5rocks.com/en/tutorials/eventsource/basics/ }}{\fldrslt{http://www.html5rocks.com/en/tutorials/eventsource/basics/\ul0\cf0}}}}\f1\fs22 )\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3104\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b sendRequest\b0 (int id, char method[5], String address);\cell Sendet einen http-Request an einen Server\line (ID, Methode (GET/POST), URL)\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3104\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b sendRequest\b0 (int id, char method[5], String address, String parameter);\tab\tab\cell Sendet einen http-Request an einen Server inklusive Sub-Parameter\cell\row 
+\pard\widctlpar\sa160\sl252\slmult1\par
+
+\pard\keep\keepn\widctlpar\s1\sb240\sl252\slmult1\cf2\f0\fs32 MQTT (NanoESP_MQTT)\par
+\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1\cf0\ul\b\f1\fs22 Funktion\ulnone\b0\cell\ul\b Erl\'e4uterung\ulnone\b0\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b connect\b0 (int id, String brooker, unsigned int port, String deviceId);\cell Baut eine Verbindung zu einem MQTT-Server auf. Minimale Parameter: Verbindungs-ID, Broker-Adresse und Ger\'e4te-ID (darf nur einmal auf dem Broker vorhanden sein)\par
+(Defaultwerte: Clean Session = true, keepAliveTime = 120s)\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b connect\b0 ( \i [\ul s.o]\ulnone\i0 , mqtt_msg * lastWill);\cell Erweitere Parameter der Connect-Funktion:\par
+Parameter: lastWill-Nachricht\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b connect\b0 ( \ul\i [s.o]\ulnone\i0  , bool cleanSession, byte keepAliveTime);\cell Erweitere Parameter der Connect-Funktion:\par
+Parameter: cleanSession, keepAliveTime\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b connect\b0 ( \ul\i [s.o]\ulnone\i0  , bool cleanSession, byte keepAliveTime, mqtt_msg * lastWill);\cell Erweitere Parameter der Connect-Funktion:\par
+Parameter: cleanSession, keepAliveTime, lastWill-Nachricht \cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b connect\b0 (\ul\i [s.o]\ulnone\i0 , String userName , String password);\par
+\cell Erweitere Parameter der Connect-Funktion:\par
+Parameter: Nutzername und Passwort f\'fcr Broker mit Benutzerverwaltung\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b connect\ul\b0\i ([s.o]\ulnone\i0 ,  bool cleanSession, byte keepAliveTime, mqtt_msg * lastWill , String userName , String password);\par
+\cell Erweitere Parameter der Connect-Funktion\par
+\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b disconnect\b0 (int id);\cell Trennt Verbindung zum MQTT-Broker\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b subscribe\b0 (int id, String topic) ;\cell Abonniert ein Topic\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b subscribe\b0 (int id, String topic, byte qos);\cell Abonniert ein Topic mit Qos\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b subscribe\b0 (int id, String topic, byte qos, void (*g)(String value));\cell Abonniert ein Topic und wei\'dft dem Topic eine Funktion zu, die aufgerufen wird, wenn eine Nachricht unter dem Topic empfangen wird (s.u. f\'fcr weitere Erkl\'e4rungen)\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b unsubscribe\b0 (int id, String topic) ;\cell Deabonniert ein Topic\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b publish\b0 (int id, String topic, String value);\cell Ver\'f6ffentlicht Nachricht unter dem angeben Topic\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b publish\b0 (int id, String topic, String value, byte qos, bool retain);\cell Ver\'f6ffentlicht Nachricht unter dem angeben Topic\par
+Zus\'e4tzliche Parameter: Quality of Service, Retain\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b publish\b0 (int id, mqtt_msg *msg);\cell Ver\'f6ffentlicht Nachricht unter dem angeben Topic (Datentyp mqtt_msg s.u.)\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b recvMQTT\b0 (int id, int len, String &topic, String &value);\cell Gibt True zur\'fcck wenn eine MQTT-Nachricht empfangen wurde. Topic und Nachricht per Referenz\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b recvMQTT\b0 (int &id, String &topic, String &value) ; \cell Gibt True zur\'fcck wenn eine MQTT-Nachricht empfangen wurde. ID, Topic und Nachricht per Referenz\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 void \b stayConnected\b0 (int id);\cell H\'e4lt die Verbindung zum Broker aktiv, indem in regelm\'e4\'dfigen Abst\'e4nden (i.d.R. StayConnected-Zeit/2) ein Ping gesendet wird\cell\row\trowd\trgaph70\trleft5\trbrdrl\brdrs\brdrw10 \trbrdrt\brdrs\brdrw10 \trbrdrr\brdrs\brdrw10 \trbrdrb\brdrs\brdrw10 \trpaddl70\trpaddr70\trpaddfl3\trpaddfr3
+\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx3969\clbrdrl\brdrw10\brdrs\clbrdrt\brdrw10\brdrs\clbrdrr\brdrw10\brdrs\clbrdrb\brdrw10\brdrs \cellx9498 
+\pard\intbl\widctlpar\sl276\slmult1 bool \b ping\b0 (int id);\cell Pingt den MQTT-Broker an (damit Verbindung bestehen bleibt)\cell\row 
+\pard\widctlpar\sa160\sl252\slmult1\par
+
+\pard\keep\keepn\widctlpar\s2\sb40\sl252\slmult1\cf2\f0\fs26 Datentyp mqtt_msg\par
+
+\pard\widctlpar\sa160\sl252\slmult1\cf0\f1\fs22 Mqtt_msg ist eine Struktur, \'fcber die eine MQTT-Nachricht definiert werden kann. \par
+
+\pard\widctlpar\li708\i   typedef struct\{\par
+\tab String topic;\par
+\tab String value;\par
+\tab byte qos;\par
+\tab bool retain;\par
+  \} mqtt_msg;\line\par
+
+\pard\widctlpar\sa160\sl252\slmult1\ul\b\i0 Beispiel:\par
+
+\pard\widctlpar\li708\sa160\sl252\slmult1\ulnone\b0\i mqtt_msg msgMode = \{"NanoESP/test/rgb/mode",\ldblquote 1\ldblquote , 0, true\};  \par
+
+\pard\widctlpar\sa160\sl252\slmult1\i0 Es k\'f6nnen auch einzelne Werte der Nachricht ver\'e4ndert werden:\par
+
+\pard\widctlpar\li708\sa160\sl252\slmult1\i msgMode.value = \'840\ldblquote ;\par
+
+\pard\widctlpar\sa160\sl252\slmult1\i0\par
+
+\pard\keep\keepn\widctlpar\s2\sb40\sl252\slmult1\cf2\f0\fs26 Abonnieren mit Funktions-Verkn\'fcpfung:\par
+
+\pard\widctlpar\sa160\sl252\slmult1\cf0\f1\fs22 In dem Befehl\par
+
+\pard\widctlpar\fi708\sa160\sl252\slmult1 bool \b subscribe\b0 (int id, String topic, byte qos, void (*g)(String value));\par
+
+\pard\widctlpar\sa160\sl252\slmult1 kann als letzter Parameter eine Funktion angeben werden, die dann aufgerufen wird, wenn zu diesem Topic eine Nachricht empfangen wurde (Wildcards erlaubt). Die Funktion muss einen Parameter vom Typ String haben, der die Nachricht des Topics enth\'e4lt. Es k\'f6nnen maximal 5 dieser Funktions-Verkn\'fcpfungen definiert werden. \par
+\ul\b Beispiel:\par
+
+\pard\widctlpar\li708\sa160\sl252\slmult1\ulnone\b0 mqtt.subscribe(0, \'84test/song", 2, gotnewSong)\par
+\par
+void gotnewSong(String value) \{\par
+  Serial.println("New Song: " + value);\par
+\}\par
+}
+ 

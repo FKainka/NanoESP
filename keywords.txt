@@ -1,0 +1,72 @@
+#######################################
+# Syntax Coloring Map For NanoESP
+#######################################
+
+#######################################
+# Datatypes  (KEYWORD1)
+#######################################
+
+
+#######################################
+# Methods and Functions  (KEYWORD2)
+#######################################
+
+NanoESP	KEYWORD2
+init	KEYWORD2
+sendCom	KEYWORD2
+setMultipleConnections	KEYWORD2
+setTransferMode	KEYWORD2
+reset	KEYWORD2
+configWifi	KEYWORD2
+configWifiMode	KEYWORD2
+configWifiStation	KEYWORD2
+configWifiAP	KEYWORD2
+disconnectWifi	KEYWORD2
+getIp	KEYWORD2
+newConnection	KEYWORD2
+closeConnection	KEYWORD2
+startUdpServer	KEYWORD2
+endUdpServer	KEYWORD2
+startTcpServer	KEYWORD2
+endTcpServer	KEYWORD2
+sendData	KEYWORD2
+sendDataClose	KEYWORD2
+getId	KEYWORD2
+ping	KEYWORD2
+serialDebug	KEYWORD2
+
+wifiConnected	KEYWORD2;
+recvData	KEYWORD2;
+getIpMac	KEYWORD2;
+sendRaw	KEYWORD2;
+
+NanoESP_HTTP	KEYWORD2
+sendFromFlash	KEYWORD2
+recvRequest	KEYWORD2
+sendStreamHeader	KEYWORD2
+sendRequest	KEYWORD2
+
+NanoESP_MQTT	KEYWORD2
+connect	KEYWORD2
+disconnect	KEYWORD2
+publish	KEYWORD2
+recvMQTT	KEYWORD2
+subscribe	KEYWORD2
+unsubscribe	KEYWORD2
+ping	KEYWORD2
+send	KEYWORD2
+send	KEYWORD2
+recvMQTT	KEYWORD2
+stayConnected	KEYWORD2
+
+#######################################
+# Constants  (LITERAL1)
+#######################################
+
+STATION	LITERAL1
+ACCESSPOINT	LITERAL1
+DUAL	LITERAL1
+TCP	LITERAL1
+UDP	LITERAL1
+GET	LITERAL1
+POST	LITERAL1
