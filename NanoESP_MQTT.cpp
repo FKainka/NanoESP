@@ -79,6 +79,8 @@ bool NanoESP_MQTT::connect(int id, String broker, unsigned int port, String devi
 
     connectFlag += boolLastWill;
     connectFlag = connectFlag << 1;
+  } else {
+    connectFlag = connectFlag << 4;
   }
 
   connectFlag += cleanSession;
