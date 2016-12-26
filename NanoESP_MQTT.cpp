@@ -33,26 +33,26 @@ NanoESP_MQTT::NanoESP_MQTT(NanoESP& nanoesp):m_nanoesp(&nanoesp){
 }
 
 
-bool NanoESP_MQTT::connect(int id, String broker, unsigned int port, String deviceId, mqtt_msg * lastWill){
+bool NanoESP_MQTT::connect(int id, const String& broker, unsigned int port, const String& deviceId, mqtt_msg * lastWill){
 	return this->connect(id, broker, port, deviceId, cleanSession, keepAliveTime, lastWill, "","");
 }
 
-bool NanoESP_MQTT::connect(int id, String broker, unsigned int port, String deviceId, String userName , String password){
+bool NanoESP_MQTT::connect(int id, const String& broker, unsigned int port, const String& deviceId, const String& userName , const String& password){
 	mqtt_msg theLastWillDefault = {"", "", 0, 0};	
 	return this->connect(id, broker, port, deviceId, cleanSession, keepAliveTime, &theLastWillDefault, userName,password);
 }
 
-bool NanoESP_MQTT::connect(int id, String broker, unsigned int port, String deviceId, bool cleanSession, byte keepAliveTime){
+bool NanoESP_MQTT::connect(int id, const String& broker, unsigned int port, const String& deviceId, bool cleanSession, byte keepAliveTime){
 	mqtt_msg theLastWillDefault = {"", "", 0, 0};	
 	return this->connect(id, broker, port, deviceId, cleanSession, keepAliveTime, &theLastWillDefault, "","");
 	
 }
-bool NanoESP_MQTT::connect(int id, String broker, unsigned int port, String deviceId, mqtt_msg * lastWill , String userName , String password){
+bool NanoESP_MQTT::connect(int id, const String& broker, unsigned int port, const String& deviceId, mqtt_msg * lastWill, const String& userName, const String& password){
 	return this->connect(id, broker, port, deviceId, cleanSession, keepAliveTime, lastWill, userName,password);
 
 }
 
-bool NanoESP_MQTT::connect(int id, String broker, unsigned int port, String deviceId, bool cleanSession, byte vkeepAliveTime, mqtt_msg * lastWill , String userName , String password)
+bool NanoESP_MQTT::connect(int id, const String& broker, unsigned int port, const String& deviceId, bool cleanSession, byte vkeepAliveTime, mqtt_msg * lastWill, const String& userName, const String& password)
 {
   if (!m_nanoesp->newConnection(id, TCP, broker, port)) return false;
 
@@ -160,7 +160,7 @@ bool NanoESP_MQTT::connect(int id, String broker, unsigned int port, String devi
 }
 
 
-bool NanoESP_MQTT::connect(int id, String broker,unsigned  int port, String deviceId) {
+bool NanoESP_MQTT::connect(int id, const String& broker,unsigned  int port, const String& deviceId) {
   mqtt_msg theLastWillDefault = {"", "", 0, 0};	
   return this->connect(id, broker, port, deviceId, cleanSession, keepAliveTime, &theLastWillDefault, "","");
 }
@@ -177,12 +177,12 @@ bool NanoESP_MQTT::disconnect(int id) {
 }
 
 
-bool NanoESP_MQTT::publish(int id, String topic, String value, byte qos, bool retain){
+bool NanoESP_MQTT::publish(int id, const String& topic, const String& value, byte qos, bool retain){
 	mqtt_msg msg = {topic, value, qos, retain};	
 	return this->publish(id, &msg);
 }
 
-bool NanoESP_MQTT::publish(int id, String topic, String value) {
+bool NanoESP_MQTT::publish(int id, const String& topic, const String& value) {
 	mqtt_msg msg = {topic, value, 0, 0};	
 	return this->publish(id, &msg);
 }
@@ -271,7 +271,7 @@ bool NanoESP_MQTT::recvMQTT(int &id, String &topic, String &value) {
 }
 
 
-bool NanoESP_MQTT::subscribe(int id, String topic, byte qos, void (*g)(String value)) 
+bool NanoESP_MQTT::subscribe(int id, const String& topic, byte qos, void (*g)(const String& value)) 
 {
 		if (this->subscribe(id,topic,qos)){
 			for (int i = 0; i<maxEvents; i++){
@@ -286,7 +286,7 @@ bool NanoESP_MQTT::subscribe(int id, String topic, byte qos, void (*g)(String va
   return false;
 }
 
-bool NanoESP_MQTT::subscribe(int id, String topic, byte qos) {
+bool NanoESP_MQTT::subscribe(int id, const String& topic, byte qos) {
 
   // Fixed Head,MS,LSB,    ,M,   Q       ?       ?   ?     ?  ,Ver X?,Conec,Kepp Alive tim
   unsigned char data[]  = {
@@ -316,7 +316,7 @@ bool NanoESP_MQTT::subscribe(int id, String topic, byte qos) {
 }
 
 
-bool NanoESP_MQTT::subscribe(int id, String topic) {
+bool NanoESP_MQTT::subscribe(int id, const String& topic) {
 
   // Fixed Head,MS,LSB,    ,M,   Q       ?       ?   ?     ?  ,Ver X?,Conec,Kepp Alive tim
   unsigned char data[]  = {
@@ -346,7 +346,7 @@ bool NanoESP_MQTT::subscribe(int id, String topic) {
   if (send(id, msg, sizeof(msg))) return true; else return false;
 }
 
-bool NanoESP_MQTT::unsubscribe(int id, String topic) {
+bool NanoESP_MQTT::unsubscribe(int id, const String& topic) {
 
   // Fixed Head,MS,LSB,    ,M,   Q       ?       ?   ?     ?  ,Ver X?,Conec,Kepp Alive tim
   unsigned char data[]  = {
@@ -472,7 +472,7 @@ return false;
 }
 
 
-bool NanoESP_MQTT::topicCompare(String topic1, String topic2) {
+bool NanoESP_MQTT::topicCompare( const String& topic1, const String& topic2) {
 //Serial.println(topic1 +" - "+topic2);
 	
   if (topic1 == "") return false;
@@ -525,7 +525,7 @@ void NanoESP_MQTT::stayConnected(int id){
 	this->stayConnected(id, interval);
 }
 
-void NanoESP_MQTT::utf8(String input, unsigned char* output) {
+void NanoESP_MQTT::utf8(const String& input, unsigned char* output) {
   byte len = input.length();
 
   output[0] = 0;

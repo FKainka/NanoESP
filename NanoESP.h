@@ -26,28 +26,28 @@ class NanoESP : public SoftwareSerial {
   public:
     NanoESP() ; 
     boolean init(boolean vDebug=false);
-    boolean sendCom(String command, char respond[]);
-    String sendCom(String command);
+    boolean sendCom(const String& command, char respond[]);
+    String sendCom(const String& command);
     boolean setMultipleConnections();
     boolean setTransferMode() ;
     boolean reset();
 
-    boolean configWifi(int modus, String ssid, String password);
+    boolean configWifi(int modus, const String& ssid, const String& password);
     boolean configWifiMode(int modus);
-    boolean configWifiStation(String ssid, String password);
-    boolean configWifiAP(String ssid, String password);
-    boolean configWifiAP(String ssid, String password, int channel, int crypt);
+    boolean configWifiStation(const String& ssid, const String& password);
+    boolean configWifiAP(const String& ssid, const String& password);
+    boolean configWifiAP(const String& ssid, const String& password, int channel, int crypt);
     boolean disconnectWifi();
     String getIp();
 
-    boolean newConnection(int id, String type, String ip , unsigned int port);
+    boolean newConnection(int id, const String& type, const String& ip , unsigned int port);
     boolean closeConnection(int id) ;
-    boolean startUdpServer(int id, String ip , unsigned int port, unsigned int recvport, int mode=0);
+    boolean startUdpServer(int id, const String& ip , unsigned int port, unsigned int recvport, int mode=0);
     boolean endUdpServer(int id);
     boolean startTcpServer(unsigned int port) ;
     boolean endTcpServer();
-    boolean sendData(int id, String msg);
-    boolean sendDataClose(int id, String msg);
+    boolean sendData(int id, const String& msg);
+    boolean sendDataClose(int id, const String& msg);
     int getId(); 		//Obsolet? !!!
     //int ping(String adress); 
 
@@ -62,7 +62,7 @@ class NanoESP : public SoftwareSerial {
 	bool sendRaw(int id, unsigned char data[], int LenChar);
 	
 	//----NEW----28.04.2016
-	 int ping(String adress); 
+	 int ping(const String& adress); 
 	//bool sendNTPpacket(int id, String address);
 	//long getNTPpacket(int id, String address, int timeZone);
 	//----TEST------

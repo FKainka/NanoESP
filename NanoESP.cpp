@@ -52,7 +52,7 @@ boolean NanoESP::reset() {
   return success;
 }
 
-boolean NanoESP::sendCom(String command, char respond[])
+boolean NanoESP::sendCom(const String& command, char respond[])
 {	
   this->println(command);
   //if (debug){Serial.println(command);}
@@ -68,7 +68,7 @@ boolean NanoESP::sendCom(String command, char respond[])
   }
 }
 
-String NanoESP::sendCom(String command)
+String NanoESP::sendCom(const String& command)
 {
   this->println(command);
   return this->readString();
@@ -76,7 +76,7 @@ String NanoESP::sendCom(String command)
 
 //----------------------------------WiFi-Functions-----------------------------------------
 
-boolean NanoESP::configWifi(int modus, String ssid, String password) 
+boolean NanoESP::configWifi(int modus, const String& ssid, const String& password) 
 {
   boolean success = true;
   switch (modus)
@@ -107,7 +107,7 @@ boolean NanoESP::configWifiMode(int modus)
 }
 
 
-boolean NanoESP::configWifiStation(String ssid, String password)
+boolean NanoESP::configWifiStation(const String& ssid, const String& password)
 {
   boolean success = true;
   this->setTimeout(30000);
@@ -116,7 +116,7 @@ boolean NanoESP::configWifiStation(String ssid, String password)
   return success;
 }
 
-boolean NanoESP::configWifiAP( String ssid, String password)
+boolean NanoESP::configWifiAP( const String& ssid, const String& password)
 {
   boolean success = true;
   this->setTimeout(20000);
@@ -127,7 +127,7 @@ boolean NanoESP::configWifiAP( String ssid, String password)
 }
 
 
-boolean NanoESP::configWifiAP( String ssid, String password, int channel, int crypt)
+boolean NanoESP::configWifiAP( const String& ssid, const String& password, int channel, int crypt)
 {
   boolean success = true;
   this->setTimeout(20000);
@@ -151,7 +151,7 @@ String NanoESP::getIp()
 
 //----------------------------------Connection-Functions-----------------------------------------
 
-boolean NanoESP::newConnection(int id, String type, String ip ,unsigned int port) {  //single direction
+boolean NanoESP::newConnection(int id, const String& type, const String& ip ,unsigned int port) {  //single direction
   boolean success = true;
   this->setTimeout(10000);
   success &= sendCom(at+cip+"START=" + String(id) + ",\"" + String(type) + "\",\"" + String(ip) + "\"," + String(port), ok); 
@@ -165,7 +165,7 @@ boolean NanoESP::closeConnection(int id) {
   return success;
 }
 
-boolean NanoESP::startUdpServer(int id, String ip ,unsigned int port,unsigned int  recvport, int mode) { //dual direction
+boolean NanoESP::startUdpServer(int id, const String& ip ,unsigned int port, unsigned int  recvport, int mode) { //dual direction
   boolean success = true;
   success &= sendCom(at+cip+"START=" + String(id) + ",\"UDP\",\"" + String(ip) + "\"," + String(port) + "," + String(recvport) + "," + String(mode), ok);
   return success;
@@ -188,7 +188,7 @@ boolean NanoESP::endTcpServer() {
   return success;
 }
 
-boolean NanoESP::sendData(int id, String msg) {
+boolean NanoESP::sendData(int id, const String& msg) {
   boolean success = true;
 
   success &= sendCom(at+cip+"SEND=" + String(id) + "," + String(msg.length() + 2), ">");
@@ -209,7 +209,7 @@ bool NanoESP::sendRaw(int id, unsigned char data[], int LenChar) {
   }
 }
 
-boolean NanoESP::sendDataClose(int id, String msg) {
+boolean NanoESP::sendDataClose(int id, const String& msg) {
   boolean success = true;
 
   success &= sendCom(at+cip+"SEND=" + String(id) + "," + String(msg.length() + 2), ">");
@@ -233,7 +233,7 @@ int NanoESP::getId() {
   else return -1;
 }
 
- int NanoESP::ping(String address) {
+ int NanoESP::ping( const String& address) {
 // boolean success = true;
   this->println(at+"PING=\"" + String(address)+"\"");
 	this->find("+");
