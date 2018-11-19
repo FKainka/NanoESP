@@ -91,7 +91,7 @@ bool NanoESP_HTTP::sendStreamHeader(int connectionId) {
   this->sendFromFlash(connectionId, serverStreamResponse, sizeof(serverStreamResponse) - 1);
 }
 
-bool NanoESP_HTTP::sendRequest(int id, char method[5], String address, String parameter) {
+bool NanoESP_HTTP::sendRequest(int id, char method[5], const String& address, const String& parameter) {
   String host = address.substring(0, address.indexOf('/'));
   String ressource = address.substring(address.indexOf('/'));
 
@@ -115,7 +115,7 @@ bool NanoESP_HTTP::sendRequest(int id, char method[5], String address, String pa
   return false;
 }
 
-bool NanoESP_HTTP::sendRequest(int id, char method[5], String address) {
+bool NanoESP_HTTP::sendRequest(int id, char method[5], const String& address) {
   return sendRequest( id,  method,  address, "");
 }
 
