@@ -207,6 +207,7 @@ bool NanoESP::sendRaw(int id, unsigned char data[], int LenChar) {
     if  (this->find("OK\r\n")) return true;
 	return false;
   }
+  return false;
 }
 
 boolean NanoESP::sendDataClose(int id, String msg) {
