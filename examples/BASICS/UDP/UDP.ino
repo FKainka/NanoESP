@@ -11,8 +11,8 @@
 #include <NanoESP.h>
 #include <SoftwareSerial.h>
 
-#define SSID "YourSSID"
-#define PASSWORD "YourPassword"
+#define SSID "NanoESP"
+#define PASSWORD ""
 
 #define LED_WLAN 13
 
