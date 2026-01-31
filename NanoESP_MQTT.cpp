@@ -426,17 +426,18 @@ bool NanoESP_MQTT::send(int id, unsigned char data[], int LenChar, char ack) {
 }
 
 //NEW
-bool NanoESP_MQTT::recvMQTT(int id, int len, String &topic, String &value) {
+bool NanoESP_MQTT::recvMQTT(int /*id*/, int len, String &topic, String &value) {
 	if (len>0){
 		if( m_nanoesp->findUntil(":", "\n")){               //+IPD, 0, 407: GET / HTTP / 1.1
 			char buffer[len];
-			m_nanoesp->readBytes(buffer, len);
+			// Use read bytes only, not complete buffer length, there might be bullshit in the buffer
+			len = m_nanoesp->readBytes(buffer, len);
 
 			if ((buffer[0] & 11110000) == MQTT_PUB) {
-				byte qos = buffer[0] & 00000110;
-				bool retain = bitRead(buffer[0],0);			
+				const byte qos = buffer[0] & 00000110;
+				//bool retain = bitRead(buffer[0],0);
 				
-				byte lenTopic = buffer[3];
+				const byte lenTopic = buffer[3];
 
 				for (int i = 0; i < lenTopic; i++) {
 					topic += buffer[i + 4];
