@@ -172,6 +172,11 @@ bool NanoESP_MQTT::disconnect(int id) {
     //Header
     MQTT_DISCON, 0x00, //Publish
   };
+  
+  // Clear subscribe.
+  for (int i = 0; i<maxEvents; i++){
+	events[i].topic = "";
+  }
 
   if (send(id, data, sizeof(data))) return true; else return false;
 }
