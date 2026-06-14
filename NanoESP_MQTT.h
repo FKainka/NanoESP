@@ -65,12 +65,15 @@ class NanoESP_MQTT {
 	bool recvMQTT(int id, int len);
 	bool topicCompare(const String&  topic1, const String&  topic2);
 	byte keepAliveTime = 120;
-	
-	
+	bool cleanSession = true;   //If no Message is sent from Client to Server within keepAliveTime the connection will be terminated
+
+
   private:
     static const byte maxEvents = 5;
 	mqtt_event events[maxEvents];
-	
+
+	unsigned long previousMillisMQTTsend = 0;   // will store last time a msg was send
+
     NanoESP* m_nanoesp;
 	
 		

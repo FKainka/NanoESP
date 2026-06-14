@@ -4,6 +4,8 @@
   www.iot.fkainka.de
 */
 
+#ifndef _NANOESP_H_
+#define _NANOESP_H_
 
 #define STATION 1
 #define ACCESSPOINT 2
@@ -13,11 +15,7 @@
 #define UDP "UDP"
 
 #define GET "GET"
-#define POST "PSOT"
-
-
-#ifndef _NANOESP_H_
-#define _NANOESP_H_
+#define POST "POST"
 
 #include "Arduino.h"
 #include <SoftwareSerial.h>

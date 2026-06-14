@@ -98,7 +98,11 @@ boolean NanoESP::configWifi(int modus, const String& ssid, const String& passwor
       success &= configWifiStation(ssid, password);
       return success;
       break;
+
+    default:
+      return false;
   }
+  return false;
 }
 
 boolean NanoESP::configWifiMode(int modus)
