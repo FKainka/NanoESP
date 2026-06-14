@@ -480,7 +480,7 @@ bool NanoESP_MQTT::topicCompare( const String& topic1, const String& topic2) {
 
   if (topic1.indexOf('+') > 0) {
     int pos1 = topic1.indexOf('/');
-    int pos2 = topic1.indexOf('/');
+    int pos2 = topic2.indexOf('/');
 
     String restTopic1 = topic1;
     String restTopic2 = topic2;

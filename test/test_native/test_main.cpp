@@ -52,6 +52,14 @@ void test_topic_hash_mismatch_prefix(void) {
   TEST_ASSERT_FALSE(mqtt.topicCompare("a/#", "x/b/c"));
 }
 
+// Regression: a '+' filter must not falsely match a topic with a different
+// number of levels. The second walk index must be seeded from the incoming
+// topic, not from the filter; with the original copy-paste bug the filter
+// "a/+/a" wrongly matched the topic "ab/a".
+void test_topic_plus_level_count_mismatch(void) {
+  TEST_ASSERT_FALSE(mqtt.topicCompare("a/+/a", "ab/a"));
+}
+
 // --------------------------------- utf8 ------------------------------------
 // utf8(input, output): output[0]=0, output[1]=len, output[2..]=payload bytes.
 
@@ -94,6 +102,7 @@ int main(int, char**) {
   RUN_TEST(test_topic_multi_plus_match);
   RUN_TEST(test_topic_hash_match);
   RUN_TEST(test_topic_hash_mismatch_prefix);
+  RUN_TEST(test_topic_plus_level_count_mismatch);
   RUN_TEST(test_utf8_encodes_length_and_payload);
   RUN_TEST(test_utf8_empty_string);
   RUN_TEST(test_charadd_concatenates_in_order);
