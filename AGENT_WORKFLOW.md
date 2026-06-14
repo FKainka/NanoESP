@@ -27,5 +27,4 @@ Rules for automated/agent contributions to this repository.
 
 ## Testing
 - Examples are compiled in CI with `arduino-cli` for `arduino:avr:nano`.
-- Native unit tests run with `pio test -e native` once the PlatformIO config
-  (`platformio.ini` + `test/`) lands in the Phase 2 test PR.
+- Native unit tests run with `pio test -e native` (see `platformio.ini` and `test/`).
