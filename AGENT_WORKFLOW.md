@@ -21,7 +21,8 @@ Rules for automated/agent contributions to this repository.
 
 ## Architecture invariants
 - `NanoESP_HTTP` and `NanoESP_MQTT` aggregate `NanoESP` by reference (no inheritance).
-- No global state in `.cpp` files — keep state in class members.
+- Do not introduce new global state in `.cpp` files — keep state in class
+  members (some legacy file-scope globals still exist and should be migrated).
 - Target ATmega328 (2 KB RAM): be frugal with `String` objects and VLAs.
 - `test/` code must not include real Arduino headers; it must compile in the PlatformIO `native` environment.
 
