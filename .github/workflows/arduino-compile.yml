@@ -39,6 +39,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # NOTE: real `pio test -e native` is wired up in Phase 2 (feat/pio-native-tests).
-      - name: Placeholder
-        run: echo "native unit tests are added in Phase 2"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install PlatformIO
+        run: pip install --upgrade platformio
+
+      - name: Run native unit tests
+        run: pio test -e native
