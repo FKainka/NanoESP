@@ -37,11 +37,13 @@ jobs:
             echo "::endgroup::"
           done
 
-  native-tests:
-    name: Native unit tests (PlatformIO)
+  native-tests-placeholder:
+    name: Native unit tests (placeholder)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # NOTE: real `pio test -e native` is wired up in Phase 2 (feat/pio-native-tests).
-      - name: Placeholder
-        run: echo "native unit tests are added in Phase 2"
+      # Real `pio test -e native` (with platformio.ini and the test/ tree) is
+      # introduced in the follow-up Phase 2 PR; this is only a placeholder so the
+      # job name is reserved and CI stays green here.
+      - name: Placeholder (no tests yet)
+        run: echo "PlatformIO native unit tests are added in the Phase 2 test PR"

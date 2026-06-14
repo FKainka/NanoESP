@@ -4,8 +4,8 @@
   www.iot.fkainka.de
 */
 
-#ifndef _NANOESP_H_
-#define _NANOESP_H_
+#ifndef NANOESP_H
+#define NANOESP_H
 
 #define STATION 1
 #define ACCESSPOINT 2
