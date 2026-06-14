@@ -102,7 +102,6 @@ boolean NanoESP::configWifi(int modus, const String& ssid, const String& passwor
     default:
       return false;
   }
-  return false;
 }
 
 boolean NanoESP::configWifiMode(int modus)

@@ -26,5 +26,6 @@ Rules for automated/agent contributions to this repository.
 - `test/` code must not include real Arduino headers; it must compile in the PlatformIO `native` environment.
 
 ## Testing
-- Native unit tests run with `pio test -e native`.
 - Examples are compiled in CI with `arduino-cli` for `arduino:avr:nano`.
+- Native unit tests run with `pio test -e native` once the PlatformIO config
+  (`platformio.ini` + `test/`) lands in the Phase 2 test PR.

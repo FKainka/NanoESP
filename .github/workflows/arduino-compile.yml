@@ -28,7 +28,10 @@ jobs:
       - name: Compile all examples
         run: |
           set -e
-          find examples -name '*.ino' -print0 | while IFS= read -r -d '' sketch; do
+          # The Blynk example pulls in third-party libraries (ESP8266_SoftSer.h,
+          # Blynk) that are not part of this repository, so it is skipped here.
+          find examples -name '*.ino' -not -path '*/Blynk/*' -print0 \
+            | while IFS= read -r -d '' sketch; do
             echo "::group::Compiling $sketch"
             arduino-cli compile --fqbn arduino:avr:nano "$sketch"
             echo "::endgroup::"
