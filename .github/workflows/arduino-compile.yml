@@ -1,0 +1,54 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  compile-examples:
+    name: Compile examples (arduino-cli)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+
+      - name: Install AVR core
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install arduino:avr
+
+      - name: Make library available to the sketches
+        run: |
+          mkdir -p "$HOME/Arduino/libraries"
+          ln -s "$GITHUB_WORKSPACE" "$HOME/Arduino/libraries/NanoESP"
+
+      - name: Compile all examples
+        run: |
+          set -e
+          # The Blynk example pulls in third-party libraries (ESP8266_SoftSer.h,
+          # Blynk) that are not part of this repository, so it is skipped here.
+          find examples -name '*.ino' -not -path '*/Blynk/*' -print0 \
+            | while IFS= read -r -d '' sketch; do
+            echo "::group::Compiling $sketch"
+            arduino-cli compile --fqbn arduino:avr:nano "$sketch"
+            echo "::endgroup::"
+          done
+
+  native-tests:
+    name: Native unit tests (PlatformIO)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install PlatformIO
+        run: pip install --upgrade platformio
+
+      - name: Run native unit tests
+        run: pio test -e native

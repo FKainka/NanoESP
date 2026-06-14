@@ -22,11 +22,6 @@ const byte MQTT_PING = 12 << 4; //Ping
 const byte MQTT_PINGACK = 13 << 4;
 const byte MQTT_DISCON = 14 << 4; //Disconnect
 
-bool cleanSession = true;
-//this->keepAliveTime = 120; //If no Message is sent from Client to Server within this time the connection will be terminated
-unsigned long previousMillisMQTTsend = 0;        // will store last time a msg was send
-//this->interval = (keepAliveTime*1000)/2;           // interval a ping is send to stay connected
-
 
 NanoESP_MQTT::NanoESP_MQTT(NanoESP& nanoesp):m_nanoesp(&nanoesp){
 
@@ -259,7 +254,7 @@ bool NanoESP_MQTT::recvMQTT(int &id, String &topic, String &value) {
       m_nanoesp->find(":");
       m_nanoesp->readBytes(buffer, len);
 
-      if ((buffer[0] & 11110000) == MQTT_PUB) {
+      if ((buffer[0] & 0b11110000) == MQTT_PUB) {
         byte lenTopic = buffer[3];
 
         for (int i = 0; i < lenTopic; i++) {
@@ -438,8 +433,8 @@ bool NanoESP_MQTT::recvMQTT(int /*id*/, int len, String &topic, String &value) {
 			// Use read bytes only, not complete buffer length, there might be bullshit in the buffer
 			len = m_nanoesp->readBytes(buffer, len);
 
-			if ((buffer[0] & 11110000) == MQTT_PUB) {
-				const byte qos = buffer[0] & 00000110;
+			if ((buffer[0] & 0b11110000) == MQTT_PUB) {
+				const byte qos = buffer[0] & 0b00000110;
 				//bool retain = bitRead(buffer[0],0);
 				
 				const byte lenTopic = buffer[3];
@@ -485,7 +480,7 @@ bool NanoESP_MQTT::topicCompare( const String& topic1, const String& topic2) {
 
   if (topic1.indexOf('+') > 0) {
     int pos1 = topic1.indexOf('/');
-    int pos2 = topic1.indexOf('/');
+    int pos2 = topic2.indexOf('/');
 
     String restTopic1 = topic1;
     String restTopic2 = topic2;

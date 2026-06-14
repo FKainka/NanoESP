@@ -88,7 +88,7 @@ bool NanoESP_HTTP::recvHTTP(int id, int len, String &method, String &ressource, 
 
 
 bool NanoESP_HTTP::sendStreamHeader(int connectionId) {
-  this->sendFromFlash(connectionId, serverStreamResponse, sizeof(serverStreamResponse) - 1);
+  return this->sendFromFlash(connectionId, serverStreamResponse, sizeof(serverStreamResponse) - 1);
 }
 
 bool NanoESP_HTTP::sendRequest(int id, char method[5], const String& address, const String& parameter) {
